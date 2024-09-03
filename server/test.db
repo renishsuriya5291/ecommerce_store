@@ -1,0 +1,118 @@
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+// 1. Users Schema
+const userSchema = new Schema({
+  username: { type: String, unique: true, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
+  firstName: { type: String },
+  lastName: { type: String },
+  address: { type: String },
+  city: { type: String },
+  state: { type: String },
+  country: { type: String },
+  postalCode: { type: String },
+  phone: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// 2. Categories Schema
+const categorySchema = new Schema({
+  name: { type: String, required: true },
+  description: { type: String },
+  parentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null }, // For subcategories
+});
+
+// 3. Products Schema
+const productSchema = new Schema({
+  name: { type: String, required: true },
+  description: { type: String },
+  price: { type: Number, required: true },
+  stockQuantity: { type: Number, required: true },
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+  subcategoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category' },
+  imageUrl: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// 4. Orders Schema
+const orderSchema = new Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  totalAmount: { type: Number, required: true },
+  status: { type: String, enum: ['pending', 'processing', 'completed', 'cancelled'], default: 'pending' },
+  paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// 5. Order Items Schema
+const orderItemSchema = new Schema({
+  orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true },
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
+});
+
+// 6. Payment Gateways Schema
+const paymentGatewaySchema = new Schema({
+  name: { type: String, required: true },
+  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+  config: { type: Object }, // Stores configuration like API keys, URLs, etc.
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// 7. Site Settings Schema
+const siteSettingsSchema = new Schema({
+  key: { type: String, unique: true, required: true },
+  value: { type: String, required: true },
+});
+
+// 8. Customer Addresses Schema (Optional)
+const customerAddressSchema = new Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  addressLine1: { type: String, required: true },
+  addressLine2: { type: String },
+  city: { type: String },
+  state: { type: String },
+  country: { type: String },
+  postalCode: { type: String },
+  phone: { type: String },
+  isDefault: { type: Boolean, default: false },
+});
+
+// 9. Product Reviews Schema (Optional)
+const productReviewSchema = new Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  rating: { type: Number, min: 1, max: 5, required: true },
+  review: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// 10. Admin Activity Log Schema (Optional for Auditing)
+const adminActivityLogSchema = new Schema({
+  adminId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  action: { type: String, required: true },
+  details: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
+
+// Exporting the Models
+module.exports = {
+  User: mongoose.model('User', userSchema),
+  Category: mongoose.model('Category', categorySchema),
+  Product: mongoose.model('Product', productSchema),
+  Order: mongoose.model('Order', orderSchema),
+  OrderItem: mongoose.model('OrderItem', orderItemSchema),
+  PaymentGateway: mongoose.model('PaymentGateway', paymentGatewaySchema),
+  SiteSettings: mongoose.model('SiteSettings', siteSettingsSchema),
+  CustomerAddress: mongoose.model('CustomerAddress', customerAddressSchema),
+  ProductReview: mongoose.model('ProductReview', productReviewSchema),
+  AdminActivityLog: mongoose.model('AdminActivityLog', adminActivityLogSchema),
+};
