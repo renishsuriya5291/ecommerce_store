@@ -7,10 +7,13 @@ import Contact from './Pages/Contact';
 import Login from './Pages/Login';
 import ProtectedRoute from './Components/ProtectedRoute';
 import NotFound from './Pages/NotFound';
+import NavBar from './Components/NavBar';
+import Footer from './Components/Footer';
 
 function App() {
   return (
     <Router>
+      <NavBar />
       <Routes>
         <Route path="/" element={
           <ProtectedRoute>
@@ -30,6 +33,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

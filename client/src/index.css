@@ -1,0 +1,26 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-part-1 {
+    background-color: black;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+    font-size: 1.125rem; /* equivalent to text-lg in Tailwind */
+  }
+  
+  .logo-part-2 {
+    background-color: white;
+    color: black;
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+    font-size: 1.125rem; /* equivalent to text-lg in Tailwind */
+  }
+  
