@@ -4,6 +4,8 @@ import { createStore } from 'redux';
 const initialState = {
   auth: {
     isAuthenticated: false,
+    token: null,
+    username: null,
   },
 };
 
@@ -15,6 +17,8 @@ const authReducer = (state = initialState, action) => {
         auth: {
           ...state.auth,
           isAuthenticated: true,
+          token: action.payload.token, // Save token
+          username: action.payload.username, // Save username
         },
       };
     case 'LOGOUT':
@@ -23,6 +27,8 @@ const authReducer = (state = initialState, action) => {
         auth: {
           ...state.auth,
           isAuthenticated: false,
+          token: null,
+          username: null,
         },
       };
     default:

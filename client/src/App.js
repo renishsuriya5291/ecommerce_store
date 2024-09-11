@@ -9,6 +9,7 @@ import ProtectedRoute from './Components/ProtectedRoute';
 import NotFound from './Pages/NotFound';
 import NavBar from './Components/NavBar';
 import Footer from './Components/Footer';
+import Register from './Pages/Register';
 
 function App() {
   return (
@@ -30,7 +31,8 @@ function App() {
             <Contact />
           </ProtectedRoute>
         } />
-        <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Login />} />
+        <Route path="/signup" element={<Register />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

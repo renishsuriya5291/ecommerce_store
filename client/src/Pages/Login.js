@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc'; // Google Icon
 import { FaEnvelope, FaLock } from 'react-icons/fa'; // Email and Password Icons
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,7 +24,7 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-[80vh]  bg-gray-100">
       <div className="bg-white p-8 rounded-xl border border-gray-300 w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-black">Login to WorkMate</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700">Email</label>
@@ -81,7 +82,7 @@ const Login = () => {
         </div>
         <p className="text-center text-gray-700 mt-4">
           Don't have an account?{' '}
-          <a href="/signup" className="text-black font-bold">Sign Up</a>
+          <Link to="/signup" className="text-black font-bold">Sign Up</Link>
         </p>
       </div>
     </div>

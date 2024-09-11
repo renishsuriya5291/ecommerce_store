@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const register = async (req, res) => {
-    const { email, password, firstName,username, lastName, country, role } = req.body;
+    const { email, password, firstName, username, lastName, country, role } = req.body;
     // validate all with joi here 
     const schema = Joi.object({
         email: Joi.string().email().required(),
@@ -18,13 +18,14 @@ const register = async (req, res) => {
 
     const { error } = schema.validate(req.body);
     if (error) {
-        return res.status(400).send({success: false, error: error.details[0].message });
+        return res.status(201).send({ success: false, error: error.details[0].message });
     }
+
 
     // check if user already exists
     const emailFromDb = await User.findOne({ email });
-    if(emailFromDb){
-        return res.status(400).send({success: false, error: "User Already Exist!"});
+    if (emailFromDb) {
+        return res.status(201).send({ success: false, error: "User Already Exist!" });
     }
 
     // hash the password then store 
@@ -34,7 +35,7 @@ const register = async (req, res) => {
 
     const user = await User.create({
         email,
-        hashedPassword,
+        password: hashedPassword,
         username,
         firstName,
         lastName,
@@ -44,8 +45,13 @@ const register = async (req, res) => {
 
     // create jwt token and append with user array 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.header('auth-token', token).send({success: true, message: 'Registered Successfully!', user});
 
+    res.status(200).json({
+        success: true,
+        message: 'Registered Successfully!',
+        user,
+        token
+    });
 };
 
 
@@ -60,22 +66,22 @@ const login = async (req, res) => {
 
     const { error } = schema.validate(req.body);
     if (error) {
-        return res.status(400).send({success: false, error: error.details[0].message });
+        return res.status(400).send({ success: false, error: error.details[0].message });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-        return res.status(400).send({success: false, error: "User not found!"});
+        return res.status(400).send({ success: false, error: "User not found!" });
     }
     // first hash the pass then compare 
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (validPassword) {
-        return res.status(400).send({success: false, error: "Invalid Password!"});
+        return res.status(400).send({ success: false, error: "Invalid Password!" });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.header('auth-token', token).send({success: true, message: 'Logged in Successfully!', user});
+    res.header('auth-token', token).send({ success: true, message: 'Logged in Successfully!', user });
 }
 
 module.exports = { register, login };
