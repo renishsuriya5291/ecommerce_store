@@ -1,6 +1,5 @@
 // src/Components/Register.js
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc'; // Google Icon
 import { FaEnvelope, FaLock, FaUser, FaGlobe, FaIdBadge } from 'react-icons/fa'; // Icons for email, password, username, country, role
@@ -18,7 +17,6 @@ const Register = () => {
   const [country, setCountry] = useState('');
   const [role, setRole] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -47,15 +45,7 @@ const Register = () => {
         localStorage.setItem('token', token);
         localStorage.setItem('username', username);
 
-        // Dispatch the register success action with the token and username
-        dispatch({
-          type: 'REGISTER_SUCCESS',
-          payload: {
-            token,
-            username,
-          },
-        });
-        const notify = () => toast('Registered Successfully!');
+        const notify = () => toast.success('Registered Successfully!');
         notify()
         // Optionally navigate to another page after registration
         setTimeout(() => {
@@ -63,12 +53,12 @@ const Register = () => {
         }, 2500);
       } else if (response.status == 201) {
         console.log(response.data.error);
-        const notify = () => toast(response.data.error);
+        const notify = () => toast.error(response.data.error);
         notify()
       }
     } catch (error) {
 
-      const notify = () => toast('Registered Failed! ');
+      const notify = () => toast.error('Registered Failed! ');
       notify()
       // You can dispatch a registration failure action here if needed
     }

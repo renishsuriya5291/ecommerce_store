@@ -2,9 +2,16 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 const NavBar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    // Logic for user logout
+    dispatch({ type: 'LOGOUT' });
+  }
 
   return (
     <nav className="bg-gray-100">
@@ -18,7 +25,7 @@ const NavBar = () => {
             <li><Link to="/about" className="text-gray-700">About</Link></li>
             <li><Link to="/contact" className="text-gray-700">Contact</Link></li>
             <li>
-              <button onClick={() => { /* logic for logout */ }} className="text-gray-700">
+              <button onClick={handleLogout} className="text-gray-700">
                 Logout
               </button>
             </li>
