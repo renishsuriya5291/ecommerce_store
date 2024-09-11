@@ -9,19 +9,15 @@ const Home = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const handleLogout = () => {
-    dispatch({ type: 'LOGOUT' });
-    navigate('/signin');
-  };
+ 
 
   if (!isAuthenticated) {
     navigate('/signin');
   }
 
   return (
-    <div>
+    <div className="p-5">
       <h2>Home</h2>
-      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

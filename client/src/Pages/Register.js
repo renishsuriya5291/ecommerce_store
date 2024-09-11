@@ -18,9 +18,12 @@ const Register = () => {
   const [role, setRole] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const userData = {
       email,
@@ -50,7 +53,7 @@ const Register = () => {
         // Optionally navigate to another page after registration
         setTimeout(() => {
           navigate('/signin')
-        }, 2500);
+        }, 200);
       } else if (response.status == 201) {
         console.log(response.data.error);
         const notify = () => toast.error(response.data.error);
@@ -62,7 +65,7 @@ const Register = () => {
       notify()
       // You can dispatch a registration failure action here if needed
     }
-    // navigate('/');
+    setIsLoading(false);
   };
 
   return (
@@ -196,9 +199,35 @@ const Register = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-black text-white py-2 rounded-xl transition duration-200"
+              className="w-full bg-black text-white py-2 rounded-xl transition duration-200 flex items-center justify-center"
+              onClick={handleSubmit}
+              disabled={isLoading} // Disable button when loading
             >
-              Register
+              {isLoading ? (
+                // Loading spinner (can replace with any spinner component)
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+              ) : (
+                'Register'
+              )}
             </button>
           </form>
           <div className="mt-6">

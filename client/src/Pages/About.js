@@ -2,7 +2,9 @@ import { react } from 'react';
 
 function About() {
     return (
-        <h1>About</h1>
+        <div className="p-5">
+      <h2>About</h2>
+    </div>
     );
 }
 
