@@ -39,10 +39,11 @@ const Login = () => {
         const notify = () => toast.success('Login Successfully!');
         notify()
         // Optionally navigate to another page after registration
-        setTimeout(() => {
-          if (response.data.user.role === 'freelancer') navigate('/freelancer/home')
-          else navigate('/client/home')
-        }, 200);
+        // setTimeout(() => {
+        //   if (response.data.user.role === 'freelancer') navigate('/freelancer/home')
+        //   else navigate('/client/home')
+        // }, 200);
+        
         dispatch({ type: 'LOGIN', payload: { token, username: response.data.user.username, role: response.data.user.role } });
       } else if (response.status == 201) {
         console.log(response.data.error);

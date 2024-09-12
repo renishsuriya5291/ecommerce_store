@@ -14,6 +14,9 @@ import NavBar from './Components/NavBar';
 import Footer from './Components/Footer';
 import Register from './Pages/Register';
 import { useSelector } from 'react-redux';
+import Home from './Pages/Home';
+import About from './Pages/About';
+import Contact from './Pages/Contact';
 
 function App() {
   const role = useSelector((state) => state.auth.role); // Access role from Redux store
@@ -54,6 +57,9 @@ function App() {
         } />
         <Route path="/signin" element={<Login />} />
         <Route path="/signup" element={<Register />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer role={role} />

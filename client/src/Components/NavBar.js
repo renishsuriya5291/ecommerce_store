@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
   const role = useSelector((state) => state.auth.role); // Get role from Redux store
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
@@ -17,8 +19,8 @@ const NavBar = () => {
         <Link to="/">
           <img src="/logo/logo.png" alt="Logo" className="h-11 m-4" />
         </Link>
-        
-        {isLoggedIn && (
+
+        {isLoggedIn == true ? (
           <ul className="flex space-x-4 mr-5">
             {/* Show different links based on role */}
             {role === 'freelancer' ? (
@@ -41,6 +43,11 @@ const NavBar = () => {
                 Logout
               </button>
             </li>
+          </ul>
+        ) : (
+          <ul className="flex space-x-4 mr-5">
+            <li><Link to="/signin" className="text-gray-700">Sign In</Link></li>
+            <li><Link to="/signup" className="text-gray-700">Sign Up</Link></li>
           </ul>
         )}
       </div>

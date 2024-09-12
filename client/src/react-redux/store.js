@@ -9,7 +9,7 @@ const initialState = {
     isAuthenticated: !!token,
     token: token,
     username: username,
-    role: null, 
+    role: null,
   },
 };
 
@@ -26,7 +26,7 @@ const authReducer = (state = initialState, action) => {
           isAuthenticated: true,
           token: action.payload.token,
           username: action.payload.username,
-          role: action.payload.role, 
+          role: action.payload.role,
         },
       };
     case 'LOGOUT':
@@ -39,7 +39,7 @@ const authReducer = (state = initialState, action) => {
           isAuthenticated: false,
           token: null,
           username: null,
-          role: null, 
+          role: null,
         },
       };
     default:
