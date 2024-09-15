@@ -54,11 +54,10 @@ const register = async (req, res) => {
     });
 };
 
-
 const login = async (req, res) => {
     const { email, password } = req.body;
 
-    // validate all with joi here 
+    // Validate the email and password using Joi
     const schema = Joi.object({
         email: Joi.string().email().required(),
         password: Joi.string().min(6).required(),
@@ -69,17 +68,19 @@ const login = async (req, res) => {
         return res.status(400).send({ success: false, error: error.details[0].message });
     }
 
+    // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
-        return res.status(400).send({ success: false, error: "User not found!" });
+        return res.status(201).send({ success: false, error: "Invalid Credentials" });
     }
-    // first hash the pass then compare 
+
+    // Compare the plain text password with the hashed password stored in the database
     const validPassword = await bcrypt.compare(password, user.password);
-
-    if (validPassword) {
-        return res.status(400).send({ success: false, error: "Invalid Password!" });
+    if (!validPassword) {
+        return res.status(201).send({ success: false, error: "Invalid Credentials" });
     }
 
+    // Generate a JWT token upon successful login
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.status(200).json({
         success: true,
@@ -87,6 +88,7 @@ const login = async (req, res) => {
         user,
         token
     });
-}
+};
+
 
 module.exports = { register, login };

@@ -32,17 +32,15 @@ const Login = () => {
       const response = await axios.post('http://localhost:5000/api/login', userData);
       if (response.status === 200) {
         console.log(response);
-        const { token } = response.data; // Assuming your API returns a token and username
-        // Store token and username in localStorage
+        const { token } = response.data; 
         localStorage.setItem('token', token);
-
         const notify = () => toast.success('Login Successfully!');
         notify()
         // Optionally navigate to another page after registration
-        // setTimeout(() => {
-        //   if (response.data.user.role === 'freelancer') navigate('/freelancer/home')
-        //   else navigate('/client/home')
-        // }, 200);
+        setTimeout(() => {
+          if (response.data.user.role === 'freelancer') navigate('/freelancer/home')
+          else navigate('/client/home')
+        }, 200);
         
         dispatch({ type: 'LOGIN', payload: { token, username: response.data.user.username, role: response.data.user.role } });
       } else if (response.status == 201) {

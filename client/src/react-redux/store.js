@@ -3,13 +3,14 @@ import { createStore } from 'redux';
 
 const token = localStorage.getItem('token');
 const username = localStorage.getItem('username');
+const role = localStorage.getItem('role');
 
 const initialState = {
   auth: {
     isAuthenticated: !!token,
     token: token,
     username: username,
-    role: null,
+    role: role,
   },
 };
 
@@ -18,6 +19,7 @@ const authReducer = (state = initialState, action) => {
     case 'LOGIN':
       localStorage.setItem('token', action.payload.token);
       localStorage.setItem('username', action.payload.username);
+      localStorage.setItem('role', action.payload.role);
 
       return {
         ...state,
@@ -32,6 +34,7 @@ const authReducer = (state = initialState, action) => {
     case 'LOGOUT':
       localStorage.removeItem('token');
       localStorage.removeItem('username');
+      localStorage.removeItem('role');
       return {
         ...state,
         auth: {
