@@ -1,5 +1,5 @@
 // src/Components/Login.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc'; // Google Icon
@@ -7,15 +7,18 @@ import { FaEnvelope, FaLock } from 'react-icons/fa'; // Email and Password Icons
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import withAuthRedirect from '../Components/withAuthRedirect';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
+ 
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +35,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:5000/api/login', userData);
       if (response.status === 200) {
         console.log(response);
-        const { token } = response.data; 
+        const { token } = response.data;
         localStorage.setItem('token', token);
         const notify = () => toast.success('Login Successfully!');
         notify()
@@ -41,7 +44,7 @@ const Login = () => {
           if (response.data.user.role === 'freelancer') navigate('/freelancer/home')
           else navigate('/client/home')
         }, 200);
-        
+
         dispatch({ type: 'LOGIN', payload: { token, username: response.data.user.username, role: response.data.user.role } });
       } else if (response.status == 201) {
         console.log(response.data.error);
@@ -156,4 +159,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withAuthRedirect(Login);

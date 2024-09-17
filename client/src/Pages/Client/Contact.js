@@ -1,4 +1,5 @@
 import { react } from 'react';
+import withAuthRedirect from '../../Components/withAuthRedirect';
 
 function CContact() {
     return (
@@ -8,4 +9,4 @@ function CContact() {
     );
 }
 
-export default CContact;
+export default withAuthRedirect(CContact);

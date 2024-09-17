@@ -1,5 +1,7 @@
 // src/Pages/FAbout.js
 import React from 'react';
+import withAuthRedirect from '../../Components/withAuthRedirect';
+
 
 function FAbout() {
     return (
@@ -60,4 +62,4 @@ function FAbout() {
     );
 }
 
-export default FAbout;
+export default withAuthRedirect(FAbout);

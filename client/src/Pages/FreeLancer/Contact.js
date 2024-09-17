@@ -1,5 +1,7 @@
 // src/Pages/FContact.js
 import React from 'react';
+import withAuthRedirect from '../../Components/withAuthRedirect';
+
 
 function FContact() {
     return (
@@ -145,4 +147,4 @@ function FContact() {
     );
 }
 
-export default FContact;
+export default withAuthRedirect(FContact);

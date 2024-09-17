@@ -1,4 +1,5 @@
 import { react } from 'react';
+import withAuthRedirect from '../../Components/withAuthRedirect';
 
 function CAbout() {
     return (
@@ -8,4 +9,4 @@ function CAbout() {
     );
 }
 
-export default CAbout;
+export default withAuthRedirect(CAbout);

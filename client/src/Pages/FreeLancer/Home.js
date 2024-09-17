@@ -1,18 +1,16 @@
 // src/Pages/Home.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Slider from 'react-slick';
+import withAuthRedirect from '../../Components/withAuthRedirect';
+
 
 const FHome = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-    if (!isAuthenticated) {
-        navigate('/signin');
-    }
+   
 
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -140,4 +138,4 @@ const FHome = () => {
     );
 };
 
-export default FHome;
+export default withAuthRedirect(FHome);
