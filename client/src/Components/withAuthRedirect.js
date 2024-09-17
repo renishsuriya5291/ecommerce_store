@@ -1,25 +1,31 @@
-// withAuthRedirect.js
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const withAuthRedirect = (WrappedComponent) => {
   return (props) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const role = useSelector((state) => state.auth.role);
 
     useEffect(() => {
       if (!isAuthenticated) {
-        navigate('/signin');
+        // Redirect to the signin page
+        navigate('/signin', { replace: true });
       } else {
-        if (role === 'client') {
-          navigate('/client/home');
-        } else if (role === 'freelancer') {
-          navigate('/freelancer/home');
+        // Logic for redirection based on role and current route
+        const currentPath = location.pathname;
+
+        if (role === 'client' && !currentPath.startsWith('/client')) {
+          // If client, redirect to client-specific route
+          navigate('/client/home', { replace: true });
+        } else if (role === 'freelancer' && !currentPath.startsWith('/freelancer')) {
+          // If freelancer, redirect to freelancer-specific route
+          navigate('/freelancer/home', { replace: true });
         }
       }
-    }, [isAuthenticated, role, navigate]);
+    }, [isAuthenticated, role, navigate, location]);
 
     return <WrappedComponent {...props} />;
   };
