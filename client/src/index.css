@@ -1,4 +1,5 @@
 /* src/index.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,23 +7,57 @@
 @import "~slick-carousel/slick/slick-theme.css";
 
 .logo-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo-part-1 {
-    background-color: black;
-    color: white;
-    padding: 0.25rem 0.5rem;
-    font-weight: bold;
-    font-size: 1.125rem; /* equivalent to text-lg in Tailwind */
-  }
-  
-  .logo-part-2 {
-    background-color: white;
-    color: black;
-    padding: 0.25rem 0.5rem;
-    font-weight: bold;
-    font-size: 1.125rem; /* equivalent to text-lg in Tailwind */
-  }
-  
+  display: flex;
+  align-items: center;
+}
+
+.logo-part-1 {
+  background-color: black;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-weight: bold;
+  font-size: 1.125rem; /* equivalent to text-lg in Tailwind */
+}
+
+.logo-part-2 {
+  background-color: white;
+  color: black;
+  padding: 0.25rem 0.5rem;
+  font-weight: bold;
+  font-size: 1.125rem; /* equivalent to text-lg in Tailwind */
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Place the grid behind the image */
+}
+
+.grid-item {
+  background-color: #ccc;
+  padding: 20px;
+  border: 1px solid #ddd;
+  transition: transform 0.3s ease-in-out;
+}
+
+.grid-item:hover {
+  transform: scale(1.1);
+}
+
+/* Add animation on scroll */
+.grid-container {
+  transform: scale(0.5); /* Initial scale */
+}
+
+.scroll-up {
+  transform: scale(1);
+}
+
+.scroll-down {
+  transform: scale(0.5);
+}

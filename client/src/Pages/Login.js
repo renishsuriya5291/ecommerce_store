@@ -1,24 +1,22 @@
 // src/Components/Login.js
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { FcGoogle } from 'react-icons/fc'; // Google Icon
-import { FaEnvelope, FaLock } from 'react-icons/fa'; // Email and Password Icons
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-import { useSelector } from 'react-redux';
-import withAuthRedirect from '../Components/withAuthRedirect';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc"; // Google Icon
+import { FaEnvelope, FaLock } from "react-icons/fa"; // Email and Password Icons
+import { Link } from "react-router-dom";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
+import withAuthRedirect from "../Components/withAuthRedirect";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
- 
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,37 +26,46 @@ const Login = () => {
     const userData = {
       email,
       password,
-    }
+    };
 
     try {
       // Make the API call for user registration
-      const response = await axios.post('http://localhost:5000/api/login', userData);
+      const response = await axios.post(
+        "http://localhost:5000/api/login",
+        userData
+      );
       if (response.status === 200) {
         console.log(response);
         const { token } = response.data;
-        localStorage.setItem('token', token);
-        const notify = () => toast.success('Login Successfully!');
-        notify()
+        localStorage.setItem("token", token);
+        const notify = () => toast.success("Login Successfully!");
+        notify();
         // Optionally navigate to another page after registration
         setTimeout(() => {
-          if (response.data.user.role === 'freelancer') navigate('/freelancer/home')
-          else navigate('/client/home')
+          if (response.data.user.role === "freelancer")
+            navigate("/freelancer/home");
+          else navigate("/client/home");
         }, 200);
 
-        dispatch({ type: 'LOGIN', payload: { token, username: response.data.user.username, role: response.data.user.role } });
+        dispatch({
+          type: "LOGIN",
+          payload: {
+            token,
+            username: response.data.user.username,
+            role: response.data.user.role,
+          },
+        });
       } else if (response.status == 201) {
         console.log(response.data.error);
         const notify = () => toast.error(response.data.error);
-        notify()
+        notify();
       }
     } catch (error) {
-
-      const notify = () => toast.error('Login Failed! ');
-      notify()
+      const notify = () => toast.error("Login Failed! ");
+      notify();
       // You can dispatch a registration failure action here if needed
     }
     setIsLoading(false);
-
   };
 
   return (
@@ -67,10 +74,14 @@ const Login = () => {
 
       <div className="flex justify-center items-center h-[80vh]  bg-gray-100">
         <div className="bg-white p-8 rounded-xl border border-gray-300 w-full max-w-sm">
-          <h2 className="text-2xl font-bold mb-6 text-center text-black">Login to WorkMate</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-black">
+            Login to WorkMate
+          </h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-gray-700">
+                Email
+              </label>
               <div className="flex items-center border border-black rounded-xl px-3 py-2">
                 <FaEnvelope className="text-gray-400 mr-2" />
                 <input
@@ -84,7 +95,9 @@ const Login = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700">Password</label>
+              <label htmlFor="password" className="block text-gray-700">
+                Password
+              </label>
               <div className="flex items-center border border-black rounded-xl px-3 py-2">
                 <FaLock className="text-gray-400 mr-2" />
                 <input
@@ -137,21 +150,21 @@ const Login = () => {
                   ></path>
                 </svg>
               ) : (
-                'Login'
+                "Login"
               )}
             </button>
           </form>
           <div className="mt-6">
-            <button
-              className="flex items-center justify-center w-full border border-black py-2 rounded-xl transition duration-200 hover:bg-gray-100"
-            >
+            <button className="flex items-center justify-center w-full border border-black py-2 rounded-xl transition duration-200 hover:bg-gray-100">
               <FcGoogle className="mr-2" />
               Login with Google
             </button>
           </div>
           <p className="text-center text-gray-700 mt-4">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-black font-bold">Sign Up</Link>
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-black font-bold">
+              Sign Up
+            </Link>
           </p>
         </div>
       </div>
