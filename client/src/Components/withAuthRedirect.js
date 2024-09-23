@@ -10,21 +10,21 @@ const withAuthRedirect = (WrappedComponent) => {
     const role = useSelector((state) => state.auth.role);
 
     useEffect(() => {
+      const currentPath = location.pathname;
+
       if (!isAuthenticated) {
-        // Redirect to the signin page
-        navigate("/signin", { replace: true });
+        // If not authenticated and not already on the signin page, redirect to signin
+        if (currentPath !== "/signin") {
+          navigate("/signin", { replace: true });
+        }
       } else {
         // Logic for redirection based on role and current route
-        const currentPath = location.pathname;
-
         if (role === "client" && !currentPath.startsWith("/client")) {
-          // If client, redirect to client-specific route
           navigate("/client/home", { replace: true });
         } else if (
           role === "freelancer" &&
           !currentPath.startsWith("/freelancer")
         ) {
-          // If freelancer, redirect to freelancer-specific route
           navigate("/freelancer/home", { replace: true });
         }
       }

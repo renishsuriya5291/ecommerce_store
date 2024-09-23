@@ -13,7 +13,7 @@ const Footer = ({ role }) => {
   return (
     <footer className="bg-black text-white py-12">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <h4 className="font-semibold mb-4">For Clients</h4>
             <ul className="space-y-2">
@@ -99,9 +99,6 @@ const Footer = ({ role }) => {
           <div className="flex justify-center space-x-6 mb-4">
             <Link to="#" className="hover:text-green-500">
               <FontAwesomeIcon icon={faWhatsapp} size="2x" />
-            </Link>
-            <Link to="#" className="hover:text-gray-300">
-              <FontAwesomeIcon icon={faApple} size="2x" />
             </Link>
             <Link to="#" className="hover:text-pink-500">
               <FontAwesomeIcon icon={faInstagram} size="2x" />

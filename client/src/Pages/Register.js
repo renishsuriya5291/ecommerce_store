@@ -1,25 +1,23 @@
 // src/Components/Register.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FcGoogle } from 'react-icons/fc'; // Google Icon
-import { FaEnvelope, FaLock, FaUser, FaGlobe, FaIdBadge } from 'react-icons/fa'; // Icons for email, password, username, country, role
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc"; // Google Icon
+import { FaEnvelope, FaLock, FaUser, FaGlobe, FaIdBadge } from "react-icons/fa"; // Icons for email, password, username, country, role
+import { Link } from "react-router-dom";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [country, setCountry] = useState('');
-  const [role, setRole] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [country, setCountry] = useState("");
+  const [role, setRole] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,37 +30,39 @@ const Register = () => {
       lastName,
       username,
       country,
-      role
+      role,
     };
     // Logic for form submission
 
     try {
       // Make the API call for user registration
-      const response = await axios.post('http://localhost:5000/api/register', userData);
+      const response = await axios.post(
+        "http://localhost:5000/api/register",
+        userData
+      );
 
       if (response.status === 200) {
         const { username } = response.data.user; // Assuming your API returns a token and username
         const { token } = response.data; // Assuming your API returns a token and username
 
         // Store token and username in localStorage
-        localStorage.setItem('token', token);
-        localStorage.setItem('username', username);
+        localStorage.setItem("token", token);
+        localStorage.setItem("username", username);
 
-        const notify = () => toast.success('Registered Successfully!');
-        notify()
+        const notify = () => toast.success("Registered Successfully!");
+        notify();
         // Optionally navigate to another page after registration
         setTimeout(() => {
-          navigate('/signin')
+          navigate("/signin");
         }, 200);
       } else if (response.status == 201) {
         console.log(response.data.error);
         const notify = () => toast.error(response.data.error);
-        notify()
+        notify();
       }
     } catch (error) {
-
-      const notify = () => toast.error('Registered Failed! ');
-      notify()
+      const notify = () => toast.error("Registered Failed! ");
+      notify();
       // You can dispatch a registration failure action here if needed
     }
     setIsLoading(false);
@@ -72,12 +72,16 @@ const Register = () => {
     <>
       <Toaster />
       <div className="flex justify-center items-center h-full mb-7 bg-gray-100">
-        <div className="bg-white p-8 rounded-xl border border-gray-300 w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-6 text-center text-black">Create An Account to WorkMate</h2>
+        <div className="bg-white p-6 md:p-8 rounded-xl border border-gray-300 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-center text-black">
+            Create An Account to WorkMate
+          </h2>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label htmlFor="firstName" className="block text-gray-700">First Name</label>
+                <label htmlFor="firstName" className="block text-gray-700">
+                  First Name
+                </label>
                 <div className="flex items-center border border-black rounded-xl px-3 py-2">
                   <FaUser className="text-gray-400 mr-2" />
                   <input
@@ -91,7 +95,9 @@ const Register = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-gray-700">Last Name</label>
+                <label htmlFor="lastName" className="block text-gray-700">
+                  Last Name
+                </label>
                 <div className="flex items-center border border-black rounded-xl px-3 py-2">
                   <FaUser className="text-gray-400 mr-2" />
                   <input
@@ -106,7 +112,9 @@ const Register = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-700">Username</label>
+              <label htmlFor="username" className="block text-gray-700">
+                Username
+              </label>
               <div className="flex items-center border border-black rounded-xl px-3 py-2">
                 <FaIdBadge className="text-gray-400 mr-2" />
                 <input
@@ -120,7 +128,9 @@ const Register = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700">Email</label>
+              <label htmlFor="email" className="block text-gray-700">
+                Email
+              </label>
               <div className="flex items-center border border-black rounded-xl px-3 py-2">
                 <FaEnvelope className="text-gray-400 mr-2" />
                 <input
@@ -134,7 +144,9 @@ const Register = () => {
               </div>
             </div>
             <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700">Password</label>
+              <label htmlFor="password" className="block text-gray-700">
+                Password
+              </label>
               <div className="flex items-center border border-black rounded-xl px-3 py-2">
                 <FaLock className="text-gray-400 mr-2" />
                 <input
@@ -147,9 +159,11 @@ const Register = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label htmlFor="country" className="block text-gray-700">Country</label>
+                <label htmlFor="country" className="block text-gray-700">
+                  Country
+                </label>
                 <div className="flex items-center border border-black rounded-xl px-3 py-2">
                   <FaGlobe className="text-gray-400 mr-2" />
                   <select
@@ -168,7 +182,9 @@ const Register = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="role" className="block text-gray-700">Role</label>
+                <label htmlFor="role" className="block text-gray-700">
+                  Role
+                </label>
                 <div className="flex items-center border border-black rounded-xl px-3 py-2">
                   <FaIdBadge className="text-gray-400 mr-2" />
                   <select
@@ -200,11 +216,9 @@ const Register = () => {
             <button
               type="submit"
               className="w-full bg-black text-white py-2 rounded-xl transition duration-200 flex items-center justify-center"
-              onClick={handleSubmit}
               disabled={isLoading} // Disable button when loading
             >
               {isLoading ? (
-                // Loading spinner (can replace with any spinner component)
                 <svg
                   className="animate-spin h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
@@ -226,21 +240,21 @@ const Register = () => {
                   ></path>
                 </svg>
               ) : (
-                'Register'
+                "Register"
               )}
             </button>
           </form>
           <div className="mt-6">
-            <button
-              className="flex items-center justify-center w-full border border-black py-2 rounded-xl transition duration-200 hover:bg-gray-100"
-            >
+            <button className="flex items-center justify-center w-full border border-black py-2 rounded-xl transition duration-200 hover:bg-gray-100">
               <FcGoogle className="mr-2" />
               Register with Google
             </button>
           </div>
           <p className="text-center text-gray-700 mt-4">
-            Already Have an Account?{' '}
-            <Link to="/signin" className="text-black font-bold">Sign In</Link>
+            Already Have an Account?{" "}
+            <Link to="/signin" className="text-black font-bold">
+              Sign In
+            </Link>
           </p>
         </div>
       </div>

@@ -72,8 +72,8 @@ const Login = () => {
     <>
       <Toaster />
 
-      <div className="flex justify-center items-center h-[80vh]  bg-gray-100">
-        <div className="bg-white p-8 rounded-xl border border-gray-300 w-full max-w-sm">
+      <div className="flex justify-center items-center w-full  min-h-screen bg-gray-100 p-1 sm:p-4">
+        <div className="bg-white p-6 md:p-8 rounded-xl border border-gray-300 w-full max-w-sm shadow-lg">
           <h2 className="text-2xl font-bold mb-6 text-center text-black">
             Login to WorkMate
           </h2>
@@ -82,12 +82,12 @@ const Login = () => {
               <label htmlFor="email" className="block text-gray-700">
                 Email
               </label>
-              <div className="flex items-center border border-black rounded-xl px-3 py-2">
+              <div className="flex items-center border border-gray-300 rounded-xl px-3 py-1 md:py-2">
                 <FaEnvelope className="text-gray-400 mr-2" />
                 <input
                   type="email"
                   id="email"
-                  className="w-full focus:outline-none"
+                  className="w-full outline-none"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -98,12 +98,12 @@ const Login = () => {
               <label htmlFor="password" className="block text-gray-700">
                 Password
               </label>
-              <div className="flex items-center border border-black rounded-xl px-3 py-2">
+              <div className="flex items-center border border-gray-300 rounded-xl px-3 py-1 md:py-2">
                 <FaLock className="text-gray-400 mr-2" />
                 <input
                   type="password"
                   id="password"
-                  className="w-full focus:outline-none"
+                  className=" w-full outline-none"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -123,12 +123,12 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-black text-white py-2 rounded-xl transition duration-200 flex items-center justify-center"
-              onClick={handleSubmit}
-              disabled={isLoading} // Disable button when loading
+              className={`w-full bg-black text-white py-2 rounded-xl transition duration-200 flex items-center justify-center ${
+                isLoading ? "opacity-50" : ""
+              }`}
+              disabled={isLoading}
             >
               {isLoading ? (
-                // Loading spinner (can replace with any spinner component)
                 <svg
                   className="animate-spin h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +155,7 @@ const Login = () => {
             </button>
           </form>
           <div className="mt-6">
-            <button className="flex items-center justify-center w-full border border-black py-2 rounded-xl transition duration-200 hover:bg-gray-100">
+            <button className="flex items-center justify-center w-full border border-gray-300 py-1 md:py-2   rounded-xl transition duration-200 hover:bg-gray-100">
               <FcGoogle className="mr-2" />
               Login with Google
             </button>
@@ -172,4 +172,4 @@ const Login = () => {
   );
 };
 
-export default withAuthRedirect(Login);
+export default Login;
