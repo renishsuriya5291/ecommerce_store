@@ -72,7 +72,7 @@ export default function CategorySlider() {
   }, []);
 
   return (
-    <div className="w-full container bg-white mx-auto px-4 pb-16">
+    <div className="w-full container bg-white mx-auto px-4 py-16">
       <div className="flex justify-between items-center mb-8 sm:mb-12">
         <h2 className="text-xl sm:text-4xl font-semibold">
           Most Popular Categories
@@ -97,7 +97,7 @@ export default function CategorySlider() {
           {categories.slice(-itemsToShow).map((category, index) => (
             <Card
               key={`prev-${index}`}
-              className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
+              className="flex-shrink-0 w-full  sm:w-1/2 md:w-1/3 lg:w-1/4"
             >
               <CardContent className="p-0">
                 <div
@@ -115,7 +115,7 @@ export default function CategorySlider() {
           {categories.map((category, index) => (
             <Card
               key={`current-${index}`}
-              className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4"
+              className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 "
             >
               <CardContent className="p-0">
                 <div

@@ -1,4 +1,3 @@
-// Button.jsx
 import React from "react";
 import clsx from "clsx";
 
@@ -11,6 +10,8 @@ const Button = ({ variant = "default", className, children, ...props }) => {
       "bg-transparent text-black-600 border border-black hover:bg-green-50",
     link: "bg-transparent text-green-600 border-transparent hover:underline",
     black: "bg-black text-white border-transparent hover:bg-gray-800",
+    blackSolid:
+      "bg-black text-white border-white hover:bg-white hover:text-black", // New variant
   };
 
   return (

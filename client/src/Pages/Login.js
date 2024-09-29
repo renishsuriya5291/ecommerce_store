@@ -9,6 +9,7 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import withAuthRedirect from "../Components/withAuthRedirect";
+import { login } from "../react-redux/store";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +36,7 @@ const Login = () => {
         userData
       );
       if (response.status === 200) {
-        console.log(response);
+        // console.log(response);
         const { token } = response.data;
         localStorage.setItem("token", token);
         const notify = () => toast.success("Login Successfully!");
@@ -47,14 +48,13 @@ const Login = () => {
           else navigate("/client/home");
         }, 200);
 
-        dispatch({
-          type: "LOGIN",
-          payload: {
+        dispatch(
+          login({
             token,
             username: response.data.user.username,
             role: response.data.user.role,
-          },
-        });
+          })
+        );
       } else if (response.status == 201) {
         console.log(response.data.error);
         const notify = () => toast.error(response.data.error);

@@ -1,5 +1,6 @@
 // src/Pages/About.js
 import React from "react";
+import withAuthRedirect from "../Components/withAuthRedirect";
 
 const About = () => {
   return (

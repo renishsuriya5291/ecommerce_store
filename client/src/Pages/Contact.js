@@ -5,6 +5,7 @@ import Button from "../Components/Button";
 import TextAreaComponent from "../Components/TextArea";
 import { MapPin, Phone, Clock, Mail } from "lucide-react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import withAuthRedirect from "../Components/withAuthRedirect";
 
 const faqs = [
   {

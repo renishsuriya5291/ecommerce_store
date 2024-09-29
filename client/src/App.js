@@ -20,10 +20,11 @@ import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import PageTransitionWrapper from "./Components/PageTransitionWrapper"; // Import the new component
 import ScrollToTop from "./Components/ScrollTop";
+import EditableComponent from "./Pages/Profile";
 
 function App() {
   const role = useSelector((state) => state.auth.role);
-
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   return (
     <Router>
       <ScrollToTop />
@@ -33,7 +34,7 @@ function App() {
           path="/"
           element={
             <>
-              <NavBarLanding />
+              {isAuth ? <NavBar role={role} /> : <NavBarLanding />}
               <PageTransitionWrapper>
                 <Home />
               </PageTransitionWrapper>
@@ -70,7 +71,7 @@ function App() {
           path="/about"
           element={
             <>
-              <NavBarLanding />
+              {isAuth ? <NavBar role={role} /> : <NavBarLanding />}
               <PageTransitionWrapper>
                 <About />
               </PageTransitionWrapper>
@@ -82,7 +83,7 @@ function App() {
           path="/contact"
           element={
             <>
-              <NavBarLanding />
+              {isAuth ? <NavBar role={role} /> : <NavBarLanding />}
               <PageTransitionWrapper>
                 <Contact />
               </PageTransitionWrapper>
@@ -133,6 +134,19 @@ function App() {
           }
         />
 
+        <Route
+          path="/freelancer/profile"
+          element={
+            <>
+              <NavBar role={role} />
+              <PageTransitionWrapper>
+                <ProtectedRoute>
+                  <EditableComponent />
+                </ProtectedRoute>
+              </PageTransitionWrapper>
+            </>
+          }
+        />
         <Route
           path="/client/home"
           element={

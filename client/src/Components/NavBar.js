@@ -1,74 +1,222 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
+import { logout } from "../react-redux/store";
+import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
-  const role = useSelector((state) => state.auth.role); // Get role from Redux store
+  const role = useSelector((state) => state.auth.role);
+  const photo = useSelector((state) => state.auth.profilephoto);
+  const username = useSelector((state) => state.auth.username);
   const dispatch = useDispatch();
+  const [scrolled, setScrolled] = useState(false);
+  const dropdownRef = useRef(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
+  const currentPath = location.pathname;
+  // console.log(currentPath);
+
+  const handleToggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
 
   const handleLogout = () => {
-    dispatch({ type: "LOGOUT" });
+    dispatch(logout());
+    setTimeout(() => {
+      navigate("/");
+    }, 100);
+  };
+
+  // Handle scroll event to change nav style
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
   };
 
   return (
-    <nav className="bg-gray-100">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/">
-          <img src="/logo/logo.png" alt="Logo" className="h-11 m-4" />
-        </Link>
+    <nav
+      className={`${
+        scrolled ? "bg-gray-200 shadow-sm py-3" : "bg-white py-4"
+      } sticky top-0 z-50 transition-all duration-300 ease-in-out `}
+    >
+      <div className="container mx-auto flex items-center justify-between px-4">
+        {/* Logo and navigation links */}
+        <div className="flex items-center gap-5">
+          {/* Logo */}
+          <button className="md:hidden text-black" onClick={toggleMobileMenu}>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+          <Link to="/">
+            <img src="/logo-2.png" alt="Logo" className="h-8 sm:h-11 " />
+          </Link>
 
-        {isLoggedIn == true ? (
-          <ul className="flex space-x-4 mr-5">
-            {/* Show different links based on role */}
-            {role === "freelancer" ? (
-              <>
-                <li>
-                  <Link to="/freelancer/home" className="text-gray-700">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/freelancer/about" className="text-gray-700">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/freelancer/contact" className="text-gray-700">
-                    Contact
-                  </Link>
-                </li>
-              </>
-            ) : role === "client" ? (
-              <>
-                <li>
-                  <Link to="/client/home" className="text-gray-700">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/client/about" className="text-gray-700">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/client/contact" className="text-gray-700">
-                    Contact
-                  </Link>
-                </li>
-              </>
-            ) : null}
+          {/* Hamburger Icon for mobile */}
 
-            {/* Logout button */}
-            <li>
-              <button onClick={handleLogout} className="text-gray-700">
-                Logout
-              </button>
-            </li>
-          </ul>
+          {/* Navigation links for medium and larger screens */}
+          {isLoggedIn && (
+            <ul className="hidden md:flex ">
+              {role === "freelancer" ? (
+                <>
+                  <li className="px-4 transition-colors duration-200">
+                    {role === "freelancer" &&
+                    !currentPath.startsWith("/freelancer") ? (
+                      <Link to="/" className="text-black font-semibold">
+                        Home
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/freelancer/home"
+                        className="text-black font-semibold"
+                      >
+                        Home
+                      </Link>
+                    )}
+                  </li>
+                  <li className="px-4 transition-colors duration-200">
+                    {role === "freelancer" &&
+                    !currentPath.startsWith("/freelancer") ? (
+                      <Link to="/about" className="text-black font-semibold">
+                        About
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/freelancer/about"
+                        className="text-black font-semibold"
+                      >
+                        About
+                      </Link>
+                    )}
+                  </li>
+                  <li className="px-4 transition-colors duration-200">
+                    {role === "freelancer" &&
+                    !currentPath.startsWith("/freelancer") ? (
+                      <Link to="/contact" className="text-black font-semibold">
+                        Contact
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/freelancer/contact"
+                        className="text-black font-semibold"
+                      >
+                        Contact
+                      </Link>
+                    )}
+                  </li>
+                </>
+              ) : role === "client" ? (
+                <>
+                  <li className="px-4 transition-colors duration-200">
+                    <Link
+                      to="/client/home"
+                      className="text-black font-semibold"
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li className="px-4 transition-colors duration-200">
+                    <Link
+                      to="/client/about"
+                      className="text-black font-semibold"
+                    >
+                      About
+                    </Link>
+                  </li>
+                  <li className="px-4 transition-colors duration-200">
+                    <Link
+                      to="/client/contact"
+                      className="text-black font-semibold"
+                    >
+                      Contact
+                    </Link>
+                  </li>
+                </>
+              ) : null}
+            </ul>
+          )}
+        </div>
+
+        {/* Right-side buttons and profile dropdown */}
+        {isLoggedIn ? (
+          <div className="flex items-center gap-5">
+            <div className="font-semibold text-gray-600 hidden md:block">{`Hi! ${username}`}</div>
+            <div className="flex items-center relative" ref={dropdownRef}>
+              {/* Profile photo with dropdown */}
+              <div
+                className="rounded-full h-10 w-10 object-cover cursor-pointer overflow-hidden"
+                onClick={handleToggleDropdown}
+              >
+                <img src={photo} className="h-full w-full" alt="Profile" />
+              </div>
+
+              {/* Dropdown menu */}
+              {dropdownOpen && (
+                <div
+                  className="absolute top-9 right-1 mt-2 w-48 bg-gray-100 text-black rounded shadow-md"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ul className="py-2">
+                    <li>
+                      <Link
+                        to="/freelancer/profile"
+                        className="block px-4 py-2  hover:bg-gray-200"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <div
+                        className="block px-4 py-2  hover:bg-gray-200 cursor-pointer"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
         ) : (
           <div className="flex items-center space-x-4">
             <Link to="/signin">
@@ -82,6 +230,51 @@ const NavBar = () => {
           </div>
         )}
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white py-2">
+          <ul className="flex flex-col space-y-2 px-4">
+            {role === "freelancer" ? (
+              <>
+                <li>
+                  <Link to="/freelancer/home" className="text-black">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/freelancer/about" className="text-black">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/freelancer/contact" className="text-black">
+                    Contact
+                  </Link>
+                </li>
+              </>
+            ) : role === "client" ? (
+              <>
+                <li>
+                  <Link to="/client/home" className="text-black">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/client/about" className="text-black">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/client/contact" className="text-black">
+                    Contact
+                  </Link>
+                </li>
+              </>
+            ) : null}
+          </ul>
+        </div>
+      )}
     </nav>
   );
 };

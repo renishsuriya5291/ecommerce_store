@@ -1,55 +1,64 @@
 // src/store.js
-import { createStore } from 'redux';
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
-const token = localStorage.getItem('token');
-const username = localStorage.getItem('username');
-const role = localStorage.getItem('role');
+const token = localStorage.getItem("token");
+const username = localStorage.getItem("username");
+const role = localStorage.getItem("role");
 
 const initialState = {
-  auth: {
-    isAuthenticated: !!token,
-    token: token,
-    username: username,
-    role: role,
+  isAuthenticated: !!token,
+  token: token || null,
+  username: username || null,
+  role: role || null,
+  profilephoto: "/avatar-1.png",
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    login: (state, action) => {
+      console.log("Login reducer called");
+      const { token, username, role, profilephoto } = action.payload;
+
+      // Set localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", username);
+      localStorage.setItem("role", role);
+      localStorage.setItem("profilephoto", profilephoto || state.profilephoto);
+
+      // Update state
+      state.isAuthenticated = true;
+      state.token = token;
+      state.username = username;
+      state.role = role;
+      state.profilephoto = profilephoto || state.profilephoto;
+    },
+    logout: (state) => {
+      console.log("Logout reducer called");
+
+      // Remove from localStorage
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("role");
+      localStorage.removeItem("profilephoto");
+
+      // Update state
+      state.isAuthenticated = false;
+      state.token = null;
+      state.username = null;
+      state.role = null;
+      state.profilephoto = "/avatar-1.png";
+    },
   },
-};
+});
 
-const authReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'LOGIN':
-      localStorage.setItem('token', action.payload.token);
-      localStorage.setItem('username', action.payload.username);
-      localStorage.setItem('role', action.payload.role);
+export const { login, logout } = authSlice.actions;
 
-      return {
-        ...state,
-        auth: {
-          ...state.auth,
-          isAuthenticated: true,
-          token: action.payload.token,
-          username: action.payload.username,
-          role: action.payload.role,
-        },
-      };
-    case 'LOGOUT':
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      localStorage.removeItem('role');
-      return {
-        ...state,
-        auth: {
-          ...state.auth,
-          isAuthenticated: false,
-          token: null,
-          username: null,
-          role: null,
-        },
-      };
-    default:
-      return state;
-  }
-};
-
-const store = createStore(authReducer);
+const store = configureStore({
+  reducer: {
+    auth: authSlice.reducer,
+  },
+});
 
 export default store;
