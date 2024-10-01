@@ -6,8 +6,8 @@ const withAuthRedirect = (WrappedComponent) => {
   return (props) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-    const role = useSelector((state) => state.auth.role);
+    const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+    const role = useSelector((state) => state.auth?.user?.role);
 
     useEffect(() => {
       const currentPath = location.pathname;

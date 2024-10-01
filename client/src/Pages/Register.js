@@ -1,9 +1,8 @@
 // src/Components/Register.js
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc"; // Google Icon
 import { FaEnvelope, FaLock, FaUser, FaGlobe, FaIdBadge } from "react-icons/fa"; // Icons for email, password, username, country, role
-import { Link } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -32,40 +31,29 @@ const Register = () => {
       country,
       role,
     };
-    // Logic for form submission
 
     try {
       // Make the API call for user registration
-      const response = await axios.post(
-        "http://localhost:5000/api/register",
-        userData
-      );
+      const response = await axios.post("/api/register", userData);
 
-      if (response.status === 200) {
-        const { username } = response.data.user; // Assuming your API returns a token and username
-        const { token } = response.data; // Assuming your API returns a token and username
-
-        // Store token and username in localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("username", username);
-
-        const notify = () => toast.success("Registered Successfully!");
-        notify();
+      if (response.status === 201) {
+        toast.success("Registered Successfully!");
         // Optionally navigate to another page after registration
         setTimeout(() => {
           navigate("/signin");
         }, 200);
-      } else if (response.status == 201) {
-        console.log(response.data.error);
-        const notify = () => toast.error(response.data.error);
+      } else {
+        const notify = () =>
+          toast.error(response.data.error || "Unexpected error occurred.");
         notify();
       }
     } catch (error) {
-      const notify = () => toast.error("Registered Failed! ");
-      notify();
-      // You can dispatch a registration failure action here if needed
+      const errorMessage =
+        error.response?.data?.error || "Registration Failed!";
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (

@@ -4,12 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { logout } from "../react-redux/store";
 import { useLocation } from "react-router-dom";
-
+import axios from "axios";
 const NavBar = () => {
   const isLoggedIn = useSelector((state) => state.auth.isAuthenticated);
-  const role = useSelector((state) => state.auth.role);
-  const photo = useSelector((state) => state.auth.profilephoto);
-  const username = useSelector((state) => state.auth.username);
+  const role = useSelector((state) => state.auth?.user?.role);
+  const photo = useSelector((state) => state.auth?.user?.profilePicture);
+  const username = useSelector((state) => state.auth?.user?.username);
   const dispatch = useDispatch();
   const [scrolled, setScrolled] = useState(false);
   const dropdownRef = useRef(null);
@@ -18,17 +18,24 @@ const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
-  // console.log(currentPath);
 
   const handleToggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
-    setTimeout(() => {
+  const handleLogout = async () => {
+    try {
+      // Make the API call for logout
+      await axios.post("/api/logout", {}, { withCredentials: true });
+
+      // Dispatch the logout action
+      dispatch(logout());
+
       navigate("/");
-    }, 100);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // You can also show a notification or alert for logout failure
+    }
   };
 
   // Handle scroll event to change nav style
@@ -88,7 +95,7 @@ const NavBar = () => {
             </svg>
           </button>
           <Link to="/">
-            <img src="/logo-2.png" alt="Logo" className="h-8 sm:h-11 " />
+            <img src="/logo-2.png" alt="Logo" className="h-6 sm:h-8 " />
           </Link>
 
           {/* Hamburger Icon for mobile */}
@@ -101,13 +108,13 @@ const NavBar = () => {
                   <li className="px-4 transition-colors duration-200">
                     {role === "freelancer" &&
                     !currentPath.startsWith("/freelancer") ? (
-                      <Link to="/" className="text-black font-semibold">
+                      <Link to="/" className="text-black text-sm">
                         Home
                       </Link>
                     ) : (
                       <Link
                         to="/freelancer/home"
-                        className="text-black font-semibold"
+                        className="text-black text-sm"
                       >
                         Home
                       </Link>
@@ -116,13 +123,13 @@ const NavBar = () => {
                   <li className="px-4 transition-colors duration-200">
                     {role === "freelancer" &&
                     !currentPath.startsWith("/freelancer") ? (
-                      <Link to="/about" className="text-black font-semibold">
+                      <Link to="/about" className="text-black text-sm">
                         About
                       </Link>
                     ) : (
                       <Link
                         to="/freelancer/about"
-                        className="text-black font-semibold"
+                        className="text-black text-sm"
                       >
                         About
                       </Link>
@@ -131,13 +138,13 @@ const NavBar = () => {
                   <li className="px-4 transition-colors duration-200">
                     {role === "freelancer" &&
                     !currentPath.startsWith("/freelancer") ? (
-                      <Link to="/contact" className="text-black font-semibold">
+                      <Link to="/contact" className="text-black text-sm ">
                         Contact
                       </Link>
                     ) : (
                       <Link
                         to="/freelancer/contact"
-                        className="text-black font-semibold"
+                        className="text-black text-sm "
                       >
                         Contact
                       </Link>
@@ -147,28 +154,37 @@ const NavBar = () => {
               ) : role === "client" ? (
                 <>
                   <li className="px-4 transition-colors duration-200">
-                    <Link
-                      to="/client/home"
-                      className="text-black font-semibold"
-                    >
-                      Home
-                    </Link>
+                    {role === "client" && !currentPath.startsWith("/client") ? (
+                      <Link to="/" className="text-black text-sm">
+                        Home
+                      </Link>
+                    ) : (
+                      <Link to="/client/home" className="text-black text-sm">
+                        Home
+                      </Link>
+                    )}
                   </li>
                   <li className="px-4 transition-colors duration-200">
-                    <Link
-                      to="/client/about"
-                      className="text-black font-semibold"
-                    >
-                      About
-                    </Link>
+                    {role === "client" && !currentPath.startsWith("/client") ? (
+                      <Link to="/about" className="text-black text-sm">
+                        About
+                      </Link>
+                    ) : (
+                      <Link to="/client/about" className="text-black text-sm">
+                        About
+                      </Link>
+                    )}
                   </li>
                   <li className="px-4 transition-colors duration-200">
-                    <Link
-                      to="/client/contact"
-                      className="text-black font-semibold"
-                    >
-                      Contact
-                    </Link>
+                    {role === "client" && !currentPath.startsWith("/client") ? (
+                      <Link to="/contact" className="text-black text-sm">
+                        Contact
+                      </Link>
+                    ) : (
+                      <Link to="/client/contact" className="text-black text-sm">
+                        Contact
+                      </Link>
+                    )}
                   </li>
                 </>
               ) : null}
@@ -198,7 +214,7 @@ const NavBar = () => {
                   <ul className="py-2">
                     <li>
                       <Link
-                        to="/freelancer/profile"
+                        to={`/${role}/profile`}
                         className="block px-4 py-2  hover:bg-gray-200"
                       >
                         Profile
@@ -237,38 +253,95 @@ const NavBar = () => {
           <ul className="flex flex-col space-y-2 px-4">
             {role === "freelancer" ? (
               <>
-                <li>
-                  <Link to="/freelancer/home" className="text-black">
-                    Home
-                  </Link>
+                <li className="px-4 transition-colors duration-200">
+                  {role === "freelancer" &&
+                  !currentPath.startsWith("/freelancer") ? (
+                    <Link to="/" className="text-black font-semibold">
+                      Home
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/freelancer/home"
+                      className="text-black font-semibold"
+                    >
+                      Home
+                    </Link>
+                  )}
                 </li>
-                <li>
-                  <Link to="/freelancer/about" className="text-black">
-                    About
-                  </Link>
+                <li className="px-4 transition-colors duration-200">
+                  {role === "freelancer" &&
+                  !currentPath.startsWith("/freelancer") ? (
+                    <Link to="/about" className="text-black font-semibold">
+                      About
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/freelancer/about"
+                      className="text-black font-semibold"
+                    >
+                      About
+                    </Link>
+                  )}
                 </li>
-                <li>
-                  <Link to="/freelancer/contact" className="text-black">
-                    Contact
-                  </Link>
+                <li className="px-4 transition-colors duration-200">
+                  {role === "freelancer" &&
+                  !currentPath.startsWith("/freelancer") ? (
+                    <Link to="/contact" className="text-black font-semibold">
+                      Contact
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/freelancer/contact"
+                      className="text-black font-semibold"
+                    >
+                      Contact
+                    </Link>
+                  )}
                 </li>
               </>
             ) : role === "client" ? (
               <>
-                <li>
-                  <Link to="/client/home" className="text-black">
-                    Home
-                  </Link>
+                <li className="px-4 transition-colors duration-200">
+                  {role === "client" && !currentPath.startsWith("/client") ? (
+                    <Link to="/" className="text-black font-semibold">
+                      Home
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/client/home"
+                      className="text-black font-semibold"
+                    >
+                      Home
+                    </Link>
+                  )}
                 </li>
-                <li>
-                  <Link to="/client/about" className="text-black">
-                    About
-                  </Link>
+                <li className="px-4 transition-colors duration-200">
+                  {role === "client" && !currentPath.startsWith("/client") ? (
+                    <Link to="/about" className="text-black font-semibold">
+                      About
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/client/about"
+                      className="text-black font-semibold"
+                    >
+                      About
+                    </Link>
+                  )}
                 </li>
-                <li>
-                  <Link to="/client/contact" className="text-black">
-                    Contact
-                  </Link>
+                <li className="px-4 transition-colors duration-200">
+                  {role === "client" && !currentPath.startsWith("/client") ? (
+                    <Link to="/contact" className="text-black font-semibold">
+                      Contact
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/client/contact"
+                      className="text-black font-semibold"
+                    >
+                      Contact
+                    </Link>
+                  )}
                 </li>
               </>
             ) : null}

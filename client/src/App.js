@@ -1,5 +1,5 @@
 // src/App.js
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import FHome from "./Pages/FreeLancer/Home";
 import CHome from "./Pages/Client/Home";
@@ -14,17 +14,48 @@ import NavBar from "./Components/NavBar"; // Default Navbar for all pages except
 import NavBarLanding from "./Components/NavBar_landing"; // Separate Navbar for home page
 import Footer from "./Components/Footer";
 import Register from "./Pages/Register";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import PageTransitionWrapper from "./Components/PageTransitionWrapper"; // Import the new component
 import ScrollToTop from "./Components/ScrollTop";
 import EditableComponent from "./Pages/Profile";
+import axios from "axios";
+import { setUser, logout } from "./react-redux/store";
 
 function App() {
-  const role = useSelector((state) => state.auth.role);
-  const isAuth = useSelector((state) => state.auth.isAuthenticated);
+  const role = useSelector((state) => state.auth?.user?.role);
+  const user = useSelector((state) => state.auth.user);
+  const isAuth = useSelector((state) => state.auth?.isAuthenticated); // Check isAuthenticated from Redux
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/api/user", {
+          withCredentials: true,
+        });
+
+        if (response.status === 200 && response.data.user) {
+          dispatch(
+            setUser({
+              isAuthenticated: true,
+              user: response.data.user,
+            })
+          );
+        } else {
+          // Clear the Redux state and local storage if no user data is found
+          // console.log("No user data found, clearing state");
+          dispatch(logout()); // Call logout to reset Redux state
+          localStorage.removeItem("persist:root"); // Clear persisted state
+        }
+      } catch (error) {}
+    };
+
+    fetchUser();
+  }, [dispatch]);
+
   return (
     <Router>
       <ScrollToTop />
@@ -135,7 +166,7 @@ function App() {
         />
 
         <Route
-          path="/freelancer/profile"
+          path={`/${role}/profile`}
           element={
             <>
               <NavBar role={role} />
@@ -147,6 +178,7 @@ function App() {
             </>
           }
         />
+
         <Route
           path="/client/home"
           element={

@@ -30,41 +30,35 @@ const Login = () => {
     };
 
     try {
-      // Make the API call for user registration
-      const response = await axios.post(
-        "http://localhost:5000/api/login",
-        userData
-      );
+      // Make the API call for user login
+      const response = await axios.post("/api/login", userData,{withCredentials:true});
+
       if (response.status === 200) {
-        // console.log(response);
-        const { token } = response.data;
-        localStorage.setItem("token", token);
+        const { user } = response.data;
+
+        // Dispatch the login action with user details
+        dispatch(login(user));
+
+        // Show success notification
         const notify = () => toast.success("Login Successfully!");
         notify();
-        // Optionally navigate to another page after registration
+
+        // Optionally navigate to another page after login
         setTimeout(() => {
-          if (response.data.user.role === "freelancer")
-            navigate("/freelancer/home");
+          if (user.role === "freelancer") navigate("/freelancer/home");
           else navigate("/client/home");
         }, 200);
-
-        dispatch(
-          login({
-            token,
-            username: response.data.user.username,
-            role: response.data.user.role,
-          })
-        );
-      } else if (response.status == 201) {
-        console.log(response.data.error);
+      } else if (response.status === 201) {
+        // Handle potential error response (like user already exists)
         const notify = () => toast.error(response.data.error);
         notify();
       }
     } catch (error) {
-      const notify = () => toast.error("Login Failed! ");
+      // Handle any other errors
+      const notify = () => toast.error("Login Failed!");
       notify();
-      // You can dispatch a registration failure action here if needed
     }
+
     setIsLoading(false);
   };
 

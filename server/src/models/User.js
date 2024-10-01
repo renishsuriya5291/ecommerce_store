@@ -19,11 +19,12 @@ const UserSchema = new mongoose.Schema({
   location: { type: String },
   profilePicture: {
     type: String,
-    default: "/avatar-1.png", // Set default value here (you can change this to any valid URL or path)
+    default: "/avatar-1.png",
   },
   verified: { type: Boolean, default: false },
-  tags: [String], // e.g., 'Rising Talent'
-  connects: { type: Number, default: 40 }, // default connects on registration
+  tags: [String],
+  country: { type: String },
+  connects: { type: Number, default: 40 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

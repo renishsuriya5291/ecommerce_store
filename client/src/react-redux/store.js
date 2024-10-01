@@ -1,64 +1,58 @@
-// src/store.js
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage"; 
 
-const token = localStorage.getItem("token");
-const username = localStorage.getItem("username");
-const role = localStorage.getItem("role");
-
-const initialState = {
-  isAuthenticated: !!token,
-  token: token || null,
-  username: username || null,
-  role: role || null,
-  profilephoto: "/avatar-1.png",
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage,
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: {
+    isAuthenticated: false,
+    user: null,
+  },
   reducers: {
     login: (state, action) => {
-      console.log("Login reducer called");
-      const { token, username, role, profilephoto } = action.payload;
-
-      // Set localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", username);
-      localStorage.setItem("role", role);
-      localStorage.setItem("profilephoto", profilephoto || state.profilephoto);
-
-      // Update state
       state.isAuthenticated = true;
-      state.token = token;
-      state.username = username;
-      state.role = role;
-      state.profilephoto = profilephoto || state.profilephoto;
+      state.user = action.payload;
     },
     logout: (state) => {
-      console.log("Logout reducer called");
-
-      // Remove from localStorage
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("role");
-      localStorage.removeItem("profilephoto");
-
-      // Update state
       state.isAuthenticated = false;
-      state.token = null;
-      state.username = null;
-      state.role = null;
-      state.profilephoto = "/avatar-1.png";
+      state.user = null;
+    },
+    setUser: (state, action) => {
+      if (action.payload.user) {
+        state.isAuthenticated = action.payload.isAuthenticated;
+        state.user = action.payload.user;
+      } else {
+        state.isAuthenticated = false;
+        state.user = null;
+      }
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setUser } = authSlice.actions;
+
+const persistedReducer = persistReducer(persistConfig, authSlice.reducer);
 
 const store = configureStore({
   reducer: {
-    auth: authSlice.reducer,
+    auth: persistedReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);
+
+
 
 export default store;
